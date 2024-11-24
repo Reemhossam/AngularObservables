@@ -1,14 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { from, fromEvent, Observable, of } from 'rxjs';
+import { filter, from, fromEvent, map, Observable, of } from 'rxjs';
+import { NewTaskComponent } from './new-task/new-task.component';
+import { ShowTaskComponent } from './show-task/show-task.component';
+import { TaskService } from './Services/Task.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,CommonModule],
+  imports: [RouterOutlet,CommonModule,NewTaskComponent, ShowTaskComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
+  providers: [TaskService]
 })
 export class AppComponent implements AfterViewInit{
   title = 'AngularObservables';
@@ -21,7 +25,7 @@ export class AppComponent implements AfterViewInit{
   @ViewChild('createbtn')
   createbtn:ElementRef;
   createObs;
-  
+
 
   //create an observanle
   // myObservable = new Observable((observer)=>{
@@ -39,8 +43,24 @@ export class AppComponent implements AfterViewInit{
   //create observable using from operator
   // myObservable= from(this.array2);
     //convert promise to observable using from operator
-    myObservable= from(this.promiseData);
- 
+    //myObservable= from(this.promiseData);
+
+    // myObservable - 2,4,6,8,10
+     // after map - 10,20,30,40,50
+    myObservable= from([2,4,6,8,10,12]);
+    transformObservable = this.myObservable.pipe(map((val)=>{
+      return val*5;
+    }));
+    filterObservable= this.transformObservable.pipe(filter((val)=>{
+      return val%4==0
+    }));
+
+    chainObservable = this.myObservable.pipe(map((val)=>{
+      return val*5;
+    }),filter((val)=>{
+      return val%4==0
+    }));
+
   onButtonClick(){
   //   this.myObservable.subscribe((val:any)=>{
   //     this.data.push(val);
@@ -52,7 +72,7 @@ export class AppComponent implements AfterViewInit{
   //     alert('All the data is streamed')
   // });
 
-  this.myObservable.subscribe({
+  this.chainObservable.subscribe({
     next: (value)=> {
       this.data.push(value);
       console.log(value);
@@ -67,14 +87,25 @@ export class AppComponent implements AfterViewInit{
   });
   }
 
-  buttonClick(){
-    this.createObs= fromEvent(this.createbtn.nativeElement,'click')
-                    .subscribe((data)=>{
-                      console.log(data);
-                    });
-  }
+  // buttonClick(){
+  //   let counter=0;
+  //   this.createObs= fromEvent(this.createbtn.nativeElement,'click')
+  //                   .subscribe((data)=>{
+  //                     this.addNewItem(++counter);
+  //                   });
+  // }
   ngAfterViewInit(): void {
-    this.buttonClick();
-    console.log("ngAfterViewInit called!")
+    // this.buttonClick();
+    // console.log("ngAfterViewInit called!")
   }
+  // addNewItem(count){
+  //   var elemDiv = document.createElement('div');
+  //   elemDiv.innerHTML='item'+count;
+  //   elemDiv.className = "data-list";
+  //   let el=document.getElementById('container');
+  //   el.appendChild(elemDiv);
+  // }
+  // unsubscribe(){
+  //   this.createObs.unsubscribe();
+  // }
 }

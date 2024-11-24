@@ -1,12 +1,15 @@
-<div class="container">
+<!-- <div class="container">
   <h2>Observables in Angular</h2>
-  <!--<div class="data-list" *ngFor="let x of data">
+  <div class="data-list" *ngFor="let x of data">
     {{ x }}
   </div>
 
-  <button (click)="onButtonClick()">Get Data</button> -->
+  <button (click)="onButtonClick()">Get Data</button>
 
-  <div class="data-list">
+   <div class="data-list" id="container">
   </div>
   <button #createbtn>Create new item</button>
-</div>
+  <button (click)="unsubscribe()">delete new item</button>
+</div> -->
+<app-new-task></app-new-task>
+<app-show-task></app-show-task>
