@@ -13,7 +13,7 @@ export class ShowTaskComponent implements OnInit{
   tasks: string[] = ['task 1', 'task 2', 'task 3']
   taskService = inject(TaskService);
   ngOnInit(): void {
-    this.taskService.myevent.subscribe((data:string)=>{
+    this.taskService.mysubject.subscribe((data:string)=>{
       this.tasks.push(data);
     })
   }
